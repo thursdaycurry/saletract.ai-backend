@@ -1,14 +1,12 @@
-import express from 'express';
-import { config } from 'dotenv';
-config();
+import app from './app.js';
+import connectToDatabase from './db/connection.js';
 
-const app = express();
-
-app.use(express.json()); // middleware to parse data into JSON
-
-app.post('/hello/:id', (req, res, next) => {
-  console.log(req.params.id);
-  return res.send('Hello');
-});
-
-app.listen(5000, () => console.log('server is running..'));
+// App listening and DB connection
+const PORT = process.env.PORT || 5000;
+connectToDatabase()
+  .then(() => {
+    app.listen(PORT, () =>
+      console.log(`Server runs on port ${PORT} and Database connected`)
+    );
+  })
+  .catch((err) => console.log(err));
